@@ -18,6 +18,6 @@ dbs]$ orapwd file=/u01/app/oracle/product/11.2.0/db_1/dbs/orapw$ORACLE_SID passw
 
 SQL> grant sysdba to bbenzerdba;
 
-Grant succeeded.
+Grant succeeded..
 
 
