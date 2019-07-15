@@ -1,0 +1,595 @@
+Esenlikler 
+
+________________________________________________________________________________________
+
+CANLI ortam
+________________________________________________________________________________________
+
+SQL> startup
+ORACLE instance started.
+
+Total System Global Area 1.9241E+10 bytes
+Fixed Size                  2159152 bytes
+Variable Size            4294970832 bytes
+Database Buffers         1.4764E+10 bytes
+Redo Buffers              179978240 bytes
+Database mounted.
+Database opened.
+SQL> Disconnected from Oracle Database 11g Enterprise Edition Release 11.1.0.7.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+[oracle@aegontrfin ~]$ lsn
+lsnodes   lsnrctl   lsnrctl0
+[oracle@aegontrfin ~]$ lsnrctl start AEGON
+
+LSNRCTL for Linux: Version 11.1.0.7.0 - Production on 15-JUL-2019 13:09:34
+
+Copyright (c) 1991, 2008, Oracle.  All rights reserved.
+
+Starting /u01/oracle/AEGON/db/tech_st/11.1.0/bin/tnslsnr: please wait...
+
+TNSLSNR for Linux: Version 11.1.0.7.0 - Production
+System parameter file is /u01/oracle/AEGON/db/tech_st/11.1.0/network/admin/AEGON_aegontrfin/listener.ora
+Log messages written to /u01/oracle/AEGON/db/tech_st/11.1.0/log/diag/tnslsnr/aegontrfin/aegon/alert/log.xml
+Listening on: (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=aegontrfin.aegontr.local)(PORT=1531)))
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=aegontrfin.aegontr.local)(PORT=1531)))
+STATUS of the LISTENER
+------------------------
+Alias                     AEGON
+Version                   TNSLSNR for Linux: Version 11.1.0.7.0 - Production
+Start Date                15-JUL-2019 13:09:35
+Uptime                    0 days 0 hr. 0 min. 0 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Listener Parameter File   /u01/oracle/AEGON/db/tech_st/11.1.0/network/admin/AEGON_aegontrfin/listener.ora
+Listener Log File         /u01/oracle/AEGON/db/tech_st/11.1.0/log/diag/tnslsnr/aegontrfin/aegon/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=aegontrfin.aegontr.local)(PORT=1531)))
+Services Summary...
+Service "AEGON" has 1 instance(s).
+  Instance "AEGON", status UNKNOWN, has 1 handler(s) for this service...
+The command completed successfully
+[oracle@aegontrfin ~]$
+[oracle@aegontrfin ~]$ logout
+
+
+[root@aegontrfin ~]# su - applmgr
+[applmgr@aegontrfin scripts]$ cd /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts
+[applmgr@aegontrfin scripts]$ adstrtal.sh apps/ae123gon
+
+You are running adstrtal.sh version 120.15
+
+The logfile for this session is located at /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/logs/appl/admin/log/adstrtal.log
+Executing service control script:
+/u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts/adopmnctl.sh start
+script returned:
+****************************************************
+
+You are running adopmnctl.sh version 120.6
+
+Starting Oracle Process Manager (OPMN) ...
+opmnctl: opmn started.
+
+adopmnctl.sh: exiting with status 0
+
+adopmnctl.sh: check the logfile /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/logs/appl/admin/log/adopmnctl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts/adalnctl.sh start
+script returned:
+****************************************************
+
+adalnctl.sh version 120.3
+
+Checking for FNDFS executable.
+Starting listener process APPS_AEGON.
+
+adalnctl.sh: exiting with status 0
+
+
+adalnctl.sh: check the logfile /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/logs/appl/admin/log/adalnctl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts/adapcctl.sh start
+script returned:
+****************************************************
+
+You are running adapcctl.sh version 120.7.12010000.2
+
+Starting OPMN managed Oracle HTTP Server (OHS) instance ...
+opmnctl: opmn is already running.
+opmnctl: starting opmn managed processes...
+
+adapcctl.sh: exiting with status 0
+
+adapcctl.sh: check the logfile /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/logs/appl/admin/log/adapcctl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts/adoacorectl.sh start
+script returned:
+****************************************************
+
+You are running adoacorectl.sh version 120.13
+
+Starting OPMN managed OACORE OC4J instance  ...
+
+adoacorectl.sh: exiting with status 0
+
+adoacorectl.sh: check the logfile /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/logs/appl/admin/log/adoacorectl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts/adformsctl.sh start
+script returned:
+****************************************************
+
+You are running adformsctl.sh  version 120.16
+
+Starting OPMN managed FORMS OC4J instance  ...
+
+adformsctl.sh: exiting with status 0
+
+adformsctl.sh: check the logfile /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/logs/appl/admin/log/adformsctl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts/adoafmctl.sh start
+script returned:
+****************************************************
+
+You are running adoafmctl.sh version 120.8
+
+Starting OPMN managed OAFM OC4J instance  ...
+
+adoafmctl.sh: exiting with status 0
+
+adoafmctl.sh: check the logfile /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/logs/appl/admin/log/adoafmctl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts/adcmctl.sh start
+script returned:
+****************************************************
+
+You are running adcmctl.sh version 120.17.12010000.3
+
+Starting concurrent manager for AEGON ...
+Starting AEGON_0715@AEGON Internal Concurrent Manager
+Default printer is noprint
+
+adcmctl.sh: exiting with status 0
+
+
+adcmctl.sh: check the logfile /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/logs/appl/admin/log/adcmctl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts/jtffmctl.sh start
+script returned:
+****************************************************
+
+You are running jtffmctl.sh version 120.3
+
+Validating Fulfillment patch level via /u01/oracle/AEGON/apps/apps_st/comn/java/classes
+Fulfillment patch level validated.
+Starting Fulfillment Server for AEGON on port 9310 ...
+
+jtffmctl.sh: exiting with status 0
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+All enabled services for this node are started.
+
+adstrtal.sh: Exiting with status 0
+
+adstrtal.sh: check the logfile /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/logs/appl/admin/log/adstrtal.log for more information ...
+
+[applmgr@aegontrfin scripts]$ adcmctl.sh start apps/ae123gon
+
+You are running adcmctl.sh version 120.17.12010000.3
+
+Starting concurrent manager for AEGON ...
+Starting AEGON_0715@AEGON Internal Concurrent Manager
+Default printer is noprint
+
+adcmctl.sh: exiting with status 0
+
+
+adcmctl.sh: check the logfile /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/logs/appl/admin/log/adcmctl.txt for more information ...
+
+[applmgr@aegontrfin scripts]$
+
+
+
+________________________________________________________________________________________
+
+T E S T ortamı
+________________________________________________________________________________________
+
+[root@aegontrfin ~]# su - oratest
+[oratest@aegontrfin ~]$ sqlplus "/ as sysdba"
+
+SQL*Plus: Release 11.1.0.7.0 - Production on Mon Jul 15 13:12:33 2019
+
+Copyright (c) 1982, 2008, Oracle.  All rights reserved.
+
+Connected to an idle instance.
+
+SQL> startup
+ORACLE instance started.
+
+Total System Global Area 1068937216 bytes
+Fixed Size                  2166536 bytes
+Variable Size             583008504 bytes
+Database Buffers          469762048 bytes
+Redo Buffers               14000128 bytes
+Database mounted.
+Database opened.
+SQL> Disconnected from Oracle Database 11g Enterprise Edition Release 11.1.0.7.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+[oratest@aegontrfin ~]$ lsnrctl start TEST
+
+LSNRCTL for Linux: Version 11.1.0.7.0 - Production on 15-JUL-2019 13:14:02
+
+Copyright (c) 1991, 2008, Oracle.  All rights reserved.
+
+Starting /u02/AEGON/TEST/db/tech_st/11.1.0/bin/tnslsnr: please wait...
+
+TNSLSNR for Linux: Version 11.1.0.7.0 - Production
+System parameter file is /u02/AEGON/TEST/db/tech_st/11.1.0/network/admin/TEST_aegontrfin/listener.ora
+Log messages written to /u02/AEGON/TEST/db/tech_st/11.1.0/log/diag/tnslsnr/aegontrfin/test/alert/log.xml
+Listening on: (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=aegontrfin.aegontr.local)(PORT=1523)))
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=aegontrfin.aegontr.local)(PORT=1523)))
+STATUS of the LISTENER
+------------------------
+Alias                     TEST
+Version                   TNSLSNR for Linux: Version 11.1.0.7.0 - Production
+Start Date                15-JUL-2019 13:14:02
+Uptime                    0 days 0 hr. 0 min. 0 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Listener Parameter File   /u02/AEGON/TEST/db/tech_st/11.1.0/network/admin/TEST_aegontrfin/listener.ora
+Listener Log File         /u02/AEGON/TEST/db/tech_st/11.1.0/log/diag/tnslsnr/aegontrfin/test/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=aegontrfin.aegontr.local)(PORT=1523)))
+Services Summary...
+Service "TEST" has 1 instance(s).
+  Instance "TEST", status UNKNOWN, has 1 handler(s) for this service...
+The command completed successfully
+[oratest@aegontrfin ~]$ logout
+[root@aegontrfin ~]#
+
+[root@aegontrfin ~]# su - appltest
+[appltest@aegontrfin ~]$ cd $ADMIN_SCRIPTS_HOME
+[appltest@aegontrfin scripts]$ pwd
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts
+[appltest@aegontrfin scripts]$ adstrtal.sh apps/ae123gon
+
+You are running adstrtal.sh version 120.15
+
+The logfile for this session is located at /u02/AEGON/TEST/inst/apps/TEST_aegontrfin/logs/appl/admin/log/adstrtal.log
+Executing service control script:
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts/adopmnctl.sh start
+script returned:
+****************************************************
+
+You are running adopmnctl.sh version 120.6
+
+Starting Oracle Process Manager (OPMN) ...
+opmnctl: opmn started.
+
+adopmnctl.sh: exiting with status 0
+
+adopmnctl.sh: check the logfile /u02/AEGON/TEST/inst/apps/TEST_aegontrfin/logs/appl/admin/log/adopmnctl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts/adalnctl.sh start
+script returned:
+****************************************************
+
+adalnctl.sh version 120.3
+
+Checking for FNDFS executable.
+Starting listener process APPS_TEST.
+
+adalnctl.sh: exiting with status 0
+
+
+adalnctl.sh: check the logfile /u02/AEGON/TEST/inst/apps/TEST_aegontrfin/logs/appl/admin/log/adalnctl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts/adapcctl.sh start
+script returned:
+****************************************************
+
+You are running adapcctl.sh version 120.7.12010000.2
+
+Starting OPMN managed Oracle HTTP Server (OHS) instance ...
+opmnctl: opmn is already running.
+opmnctl: starting opmn managed processes...
+
+adapcctl.sh: exiting with status 0
+
+adapcctl.sh: check the logfile /u02/AEGON/TEST/inst/apps/TEST_aegontrfin/logs/appl/admin/log/adapcctl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts/adoacorectl.sh start
+script returned:
+****************************************************
+
+You are running adoacorectl.sh version 120.13
+
+Starting OPMN managed OACORE OC4J instance  ...
+
+adoacorectl.sh: exiting with status 0
+
+adoacorectl.sh: check the logfile /u02/AEGON/TEST/inst/apps/TEST_aegontrfin/logs/appl/admin/log/adoacorectl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts/adformsctl.sh start
+script returned:
+****************************************************
+
+You are running adformsctl.sh  version 120.16
+
+Starting OPMN managed FORMS OC4J instance  ...
+
+adformsctl.sh: exiting with status 0
+
+adformsctl.sh: check the logfile /u02/AEGON/TEST/inst/apps/TEST_aegontrfin/logs/appl/admin/log/adformsctl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts/adoafmctl.sh start
+script returned:
+****************************************************
+
+You are running adoafmctl.sh version 120.8
+
+Starting OPMN managed OAFM OC4J instance  ...
+
+adoafmctl.sh: exiting with status 0
+
+adoafmctl.sh: check the logfile /u02/AEGON/TEST/inst/apps/TEST_aegontrfin/logs/appl/admin/log/adoafmctl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts/adcmctl.sh start
+script returned:
+****************************************************
+
+You are running adcmctl.sh version 120.17.12010000.3
+
+Starting concurrent manager for TEST ...
+Starting TEST_0715@TEST Internal Concurrent Manager
+Default printer is noprint
+
+adcmctl.sh: exiting with status 0
+
+
+adcmctl.sh: check the logfile /u02/AEGON/TEST/inst/apps/TEST_aegontrfin/logs/appl/admin/log/adcmctl.txt for more information ...
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+Executing service control script:
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts/jtffmctl.sh start
+script returned:
+****************************************************
+
+You are running jtffmctl.sh version 120.3
+
+Validating Fulfillment patch level via /u02/AEGON/TEST/apps/apps_st/comn/java/classes
+Fulfillment patch level validated.
+Starting Fulfillment Server for TEST on port 9302 ...
+
+jtffmctl.sh: exiting with status 0
+
+
+.end std out.
+
+.end err out.
+
+****************************************************
+
+
+All enabled services for this node are started.
+
+adstrtal.sh: Exiting with status 0
+
+adstrtal.sh: check the logfile /u02/AEGON/TEST/inst/apps/TEST_aegontrfin/logs/appl/admin/log/adstrtal.log for more information ...
+
+[appltest@aegontrfin scripts]$ adcmctl.sh start apps/ae123gon
+
+You are running adcmctl.sh version 120.17.12010000.3
+
+Starting concurrent manager for TEST ...
+Starting TEST_0715@TEST Internal Concurrent Manager
+Default printer is noprint
+
+adcmctl.sh: exiting with status 0
+
+
+adcmctl.sh: check the logfile /u02/AEGON/TEST/inst/apps/TEST_aegontrfin/logs/appl/admin/log/adcmctl.txt for more information ...
+
+
+
+Saygılar
+Suluhan
+ 
+
+From: Cezmi Aydogdu <cezmi.aydogdu@ithinka.com> 
+Sent: Saturday, July 13, 2019 10:50 PM
+To: 'Serkan Cetinkaya' <serkan.cetinkaya@ithinka.com>; 'Murat SULUHAN' <murat.suluhan@ithinka.com>; berk.benzer@ithinka.com; 'Okay Gedik' <okay.gedik@ithinka.com>; faruk.gur@ithinka.com; ismet.tekin@ithinka.com; can.ozyurt@ithinka.com
+Subject: aegon ofa kapatıp açma adımlari
+
+
+Kapatma adımları;
+PROD:
+su - applmgr
+cd /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts
+adcmctl.sh stop apps/ae123gon
+adstpall.sh apps/ae123gon
+exit
+su - oracle
+sqlplus / as sysdba
+shutdown immediate
+lsnrctl stop AEGON
+
+TEST:
+su - appltest
+[appltest@aegontrfin ~]$ cd $ADMIN_SCRIPTS_HOME 
+[appltest@aegontrfin scripts]$ pwd
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts
+adcmctl.sh stop apps/ae123gon
+adstpall.sh apps/ae123gon
+exit
+su - oratest
+sqlplus / as sysdba
+shutdown immediate
+lsnrctl stop test
+
+
+Açma adımları;
+PROD:
+su - oracle
+sqlplus / as sysdba
+startup
+lsnrctl start AEGON
+exit
+su - applmgr
+cd /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts
+adstrtal.sh apps/ae123gon
+adcmctl.sh start apps/ae123gon
+
+TEST:
+su - oracle
+sqlplus / as sysdba
+startup
+lsnrctl start test
+exit
+su - appltest
+[appltest@aegontrfin ~]$ cd $ADMIN_SCRIPTS_HOME 
+[appltest@aegontrfin scripts]$ pwd
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts
+adstrtal.sh apps/ae123gon
+adcmctl.sh start apps/ae123gon
+
+
+
+
+
+ 
+
