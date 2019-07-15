@@ -1,4 +1,62 @@
-Esenlikler 
+
+Kapatma adımları;
+PROD:
+su - applmgr
+cd /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts
+adcmctl.sh stop apps/ae123gon
+adstpall.sh apps/ae123gon
+exit
+su - oracle
+sqlplus / as sysdba
+shutdown immediate
+lsnrctl stop AEGON
+
+TEST:
+su - appltest
+[appltest@aegontrfin ~]$ cd $ADMIN_SCRIPTS_HOME 
+[appltest@aegontrfin scripts]$ pwd
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts
+adcmctl.sh stop apps/ae123gon
+adstpall.sh apps/ae123gon
+exit
+su - oratest
+sqlplus / as sysdba
+shutdown immediate
+lsnrctl stop test
+
+
+Açma adımları;
+PROD:
+su - oracle
+sqlplus / as sysdba
+startup
+lsnrctl start AEGON
+exit
+su - applmgr
+cd /u01/oracle/AEGON/inst/apps/AEGON_aegontrfin/admin/scripts
+adstrtal.sh apps/ae123gon
+adcmctl.sh start apps/ae123gon
+
+TEST:
+su - oracle
+sqlplus / as sysdba
+startup
+lsnrctl start test
+exit
+su - appltest
+[appltest@aegontrfin ~]$ cd $ADMIN_SCRIPTS_HOME 
+[appltest@aegontrfin scripts]$ pwd
+/u02/AEGON/TEST/inst/apps/TEST_aegontrfin/admin/scripts
+adstrtal.sh apps/ae123gon
+adcmctl.sh start apps/ae123gon
+
+
+
+
+
+ 
+
+
 
 ________________________________________________________________________________________
 
