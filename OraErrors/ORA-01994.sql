@@ -21,3 +21,4 @@ SQL> grant sysdba to bbenzerdba;
 Grant succeeded..
 
 
+ 
