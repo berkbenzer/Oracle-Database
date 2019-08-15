@@ -1,5 +1,5 @@
-/* Formatted on 5/30/2019 11:34:30 AM (QP5 v5.294) */
-CREATE OR REPLACE FORCE VIEW SYS.GV_LOCK_DET
+
+CREATE OR REPLACE FORCE VIEW BESPROD.GV_LOCK_DET
 (
    SESS,
    "USER",
@@ -18,7 +18,7 @@ CREATE OR REPLACE FORCE VIEW SYS.GV_LOCK_DET
    LAST_CALL_ET,
    SQL_ID
 )
-   BEQUEATH DEFINER
+
 AS
    SELECT l.sess,
              s.inst_id
@@ -90,3 +90,6 @@ AS
              ON w.sid = s.sid AND w.INST_ID = s.INST_ID
           LEFT OUTER JOIN gv$process p
              ON p.addr = s.paddr AND p.inst_id = s.inst_id;
+
+
+CREATE OR REPLACE SYNONYM APPDBCONN.GV_LOCK_DET FOR BESPROD.GV_LOCK_DET;
