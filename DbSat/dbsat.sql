@@ -19,4 +19,7 @@ mkdir dbsat_d/
 unzip dbsat.zip
 
 
-./dbsat collect DBSAT_USER@test test_out
+./dbsat collect DBSAT_USER@test fehhrouut --it creates json file
+
+--In order to create html and xls file you need execute command below
+./dbsat report fehhrouut
