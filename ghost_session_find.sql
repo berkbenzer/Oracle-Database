@@ -8,7 +8,8 @@ SELECT    'alter system kill session '''
 
 
 
- select s.sid, s.serial#, s.status, p.spid
+ 
+ select 'alter system kill session ''' || s.sid || ',' || s.serial# || ''';'
 from v$session s, v$process p
 where s.username = 'LFRY'
 and p.addr (+) = s.paddr;
