@@ -1,0 +1,732 @@
+#COPIED FROM https://ramkedem.com/en/oracle-auditing-examples/
+
+
+-- * A secure system ensures the confidentiality of the data that it contains. 
+-- * There are several aspects of security:
+--   1. Restricting access to data and services
+--   2. Authenticating users
+--   3. Monitoring for suspicious activity
+ 
+-- Audit Types:
+ 
+-- 1. Mandatory Auditing 
+--    Regardless of whether database auditing is enabled, Oracle Database always audits 
+--    certain database-related operations and writes them to the operating system audit file. 
+--    This fact is called mandatory auditing, and it includes the following operations:
+--    1. Connections to the instance with administrator privileges
+--       An audit record is generated that lists the operating system user connecting to Oracle 
+--       Database as SYSOPER or SYSDBA. 
+--       This provides for accountability of users with administrative privileges. 
+--    2. Database startup
+--       An audit record is generated that lists the operating system user starting the instance 
+--       and the date and time stamp. 
+--       This data is stored in the operating system audit trail because the database 
+--       audit trail is not available until after the startup has successfully completed.
+--    3. Database shutdown
+--       An audit record is generated that lists the operating system user shutting down the 
+--       instance and the date and time stamp.
+--    *(win) Start =&gt;  Control Panel =&gt; Performance and Maintenance =&gt; Administrative Tools =&gt;  
+--     Computer Management =&gt; Event Viewer, Application Log (Log viewer) on Windows.
+--    *(unix) AUDIT_FILE_DEST directory
+ 
+--
+-- 2. Standard DB auditing 
+--     - Using the AUDIT command. ("AUDIT DROP TABLE")
+--     - Audits according to privileges.
+--     - Can be "By Access" or "By Session" 
+--            (Defaults: SYSTEM privs - By Access, OBJECT privs - By Session)
+--     - Can be "Whenever Successful" or "Whenever Not Successful" (Default is both)
+--     - Must be enabled manually via static AUDIT_TRAIL parameter.(=DB / DB_EXTENDED / OS / NONE)
+--         - DB : DBA_AUDIT_TRAIL
+--         - OS : Event Log (windows) or Audit_file_dest (Unix)
+--         - XML: XML file in Audit_file_dest. (Can view with V$XML_AUDIT_TRAIL)
+--     - AUDIT_TRAIL=DB_EXTENDED:
+--       - Stores also full SQL + Binds
+--       - Stores Transaction identifier (To group related statements)
+--     - 11g behavior:
+--        - DBCA sets AUDIT_TRAIL=DB
+--        - Audits Many ANY privileges, GRANTs, CREATE USER etc. by default.
+--
+-- 3. Triggers - Value based auditing 
+--     - Captures the actual values that changed. (Old and New)
+--     - Uses PL/SQL Triggers.
+--     - Fires at row level. ("For Each Row")
+--
+-- 4. FGA - Fine Grained Auditing 
+--     - Conditional:
+--       - Can specify which columns I want to audit. (And specify ANY/ALL)
+--       - Can specify conditions for auditing.
+--       - Null columns &amp;amp; Conditions will audit all columns and all rows.
+--       - Monitors the statements actual result (affected rows), Not the statement's original 
+--         predicate.
+--          (Accept for SELECT statement which captures the statement itself)
+--     - Captures the actual SQL statement + Binds.
+--     - Can execute a procedure. ("Handler Module")
+--     - Create and maintain Audit Policies via DBMS_FGA. (DBMS_FGA.ADD_POLICY)
+--     - Works at statement level. (Not ROW-Level like Value-Based triggers)
+--
+-- 5. SYSDBA auditing 
+--     - Stores the audit data also outside the DB, in an OS trail, to track the DBA.
+--     - Can set the parameter "audit_sys_operations" to TRUE. (Defualt is FALSE)
+ 
+ 
+-- * Three relevant tables:
+--   1. DBA_AUDIT_TRAIL - Standard Auditing.
+--   2. DBA_FGA_AUDIT_TRAIL - FGA
+--   3. DBA_COMMON_AUDIT_TRAIL - Combines them both to One central location.
+ 
+ 
+-------------------------------------------------------------------------------------------
+-- STANDARD DB AUDITING (AUDIT / AUDIT_TRAIL / DBA_AUDIT_TRAIL)
+-------------------------------------------------------------------------------------------
+ 
+-- 1. Activate AUDITING (In 11g enabled by default)
+-- 2. Specify audit options
+-- 3. Review the audited actions 
+-- 4. Maintenance
+ 
+DROP TABLE hr.emp2;
+ 
+CREATE TABLE hr.emp2 AS SELECT * FROM hr.employees;
+ 
+ 
+-- 1. Activate AUDITING (In 11g enabled by default)
+---------------------------------------------------
+ 
+show parameter AUDIT_TRAIL
+ 
+-- 1.None 
+--   (or FALSE) Database auditing is disabled, no matter what auditing
+--    you attempt to configure.
+-- 2.OS 
+--    Audit records will be written to the operating system’s audit trail: 
+--    *(win) Start =&gt;  Control Panel =&gt; Performance and Maintenance =&gt; Administrative Tools =&gt;  
+--     Computer Management =&gt; Event Viewer, Application Log (Log viewer) on Windows.
+--    *(unix) AUDIT_FILE_DEST directory
+-- 3. DB
+--    (or TRUE) The audit records are written to a data dictionary table,
+--    SYS.AUD$. There are views that let you see the contents of this table.
+-- 4. DB_EXTENDED 
+--   (11g) - As DB, but including information on the SQL statements
+--    with bind variables that generated the audit records.
+--    show parameter audit_trail
+ 
+-- NONE 
+ 
+ALTER SYSTEM SET audit_trail = FALSE SCOPE=SPFILE ;
+ALTER SYSTEM SET audit_trail = NONE  SCOPE=SPFILE ;
+ 
+-- OS  
+ 
+ALTER SYSTEM SET audit_trail = OS SCOPE=SPFILE ;
+ 
+-- DB 
+ 
+ALTER SYSTEM SET audit_trail = DB SCOPE=SPFILE ;
+ 
+-- DB_EXTENDED 
+ 
+ALTER SYSTEM SET audit_trail = DB_EXTENDED SCOPE=SPFILE ;
+ 
+-----------------
+ 
+SHUTDOWN IMMEDIATE
+STARTUP
+ 
+-- 2. Specify audit options
+---------------------------
+ 
+Privilege Auditing
+------------------
+ 
+-- * Enables you to audit the use of powerful system privileges that enable corresponding actions, 
+--   such as AUDIT CREATE TABLE. 
+--   You can set privilege auditing to audit a selected user or every user in the database.
+-- * Can be "By Access" or "By Session" 
+--   Defaults: SYSTEM privs - By Access, OBJECT privs - By Session 
+-- * Can be "Whenever Successful" or "Whenever Not Successful" 
+--   Default is both
+ 
+-- AUDIT privilege_name [BY username] [by SESSION | ACCESS] [WHENEVER SUCCESSFUL | NOT SUCCESSFUL]
+ 
+NOAUDIT CREATE SESSION ;
+NOAUDIT CREATE SESSION BY HR;
+NOAUDIT UPDATE ANY TABLE ;
+NOAUDIT UPDATE ANY TABLE BY hr ; 
+ 
+set lines 200
+col audit_option for a30
+ 
+SELECT user_name, audit_option, success, failure
+FROM DBA_STMT_AUDIT_OPTS;
+ 
+-- Basic audit  
+AUDIT CREATE SESSION ;
+ 
+SELECT user_name, audit_option, success, failure
+FROM DBA_STMT_AUDIT_OPTS
+WHERE audit_option LIKE '%SESSION%';
+ 
+-- Specify the user 
+AUDIT CREATE SESSION BY hr BY ACCESS ;
+ 
+SELECT user_name, audit_option, success, failure
+FROM DBA_STMT_AUDIT_OPTS
+WHERE audit_option LIKE '%SESSION%';
+ 
+-- audit - (success &amp;amp; failure) by session 
+AUDIT UPDATE ANY TABLE BY hr BY SESSION ; 
+ 
+SELECT user_name, audit_option, success, failure
+FROM DBA_STMT_AUDIT_OPTS
+WHERE audit_option LIKE '%UPDATE%';
+ 
+-- Change the audit - (success only) by access 
+AUDIT UPDATE ANY TABLE BY hr BY ACCESS WHENEVER SUCCESSFUL ;
+ 
+-- Change the audit - (failure only) by access
+AUDIT UPDATE ANY TABLE BY hr BY ACCESS WHENEVER NOT SUCCESSFUL ;
+ 
+-- Change the audit - (failure only) by session
+AUDIT UPDATE ANY TABLE BY hr BY SESSION WHENEVER NOT SUCCESSFUL ;
+ 
+-- NOAUDIT Options 
+------------------
+NOAUDIT CREATE SESSION ;
+NOAUDIT CREATE SESSION BY hr ;
+NOAUDIT UPDATE ANY TABLE ;
+NOAUDIT UPDATE ANY TABLE BY hr; 
+NOAUDIT UPDATE ANY TABLE BY hr WHENEVER SUCCESSFUL ;
+ 
+ 
+-- Schema Object Auditing
+------------------------- 
+-- * Enables you to audit specific statements on a particular schema object, 
+--   such as AUDIT SELECT ON employees. 
+-- * Schema object auditing always applies to all users of the database.
+-- * Can be "By Access" or "By Session" 
+--   Defaults: SYSTEM privs - By Access, OBJECT privs - By Session 
+-- * Can be "Whenever Successful" or "Whenever Not Successful" 
+--   Default is both 
+ 
+-- AUDIT object_priv_name ON object_name [BY ACCESS | SESSION][WHENEVER SUCCESSFUL|NOT SUCCESSFUL]
+ 
+CREATE TABLE hr.emp2 AS SELECT * FROM hr.employees ;
+NOAUDIT DELETE ON hr.emp2 ;
+ 
+col owner for a10
+col object_type for a15
+col object_name for a15
+ 
+SELECT OWNER, OBJECT_NAME, OBJECT_TYPE, INS, UPD, DEL
+FROM DBA_OBJ_AUDIT_OPTS
+ 
+-- basic audit - (success &amp;amp; failure) 
+AUDIT DELETE ON hr.emp2;
+ 
+SELECT OWNER, OBJECT_NAME, OBJECT_TYPE, INS, UPD, DEL
+FROM DBA_OBJ_AUDIT_OPTS;
+ 
+-- * The character "-" indicates that the audit option is not set.
+-- * The character "S" indicates that the audit option is set, BY SESSION.
+-- * The character "A" indicates that the audit option is set, BY ACCESS.
+-- * Each audit option has two possible settings, WHENEVER SUCCESSFUL and WHENEVER NOT SUCCESSFUL
+ 
+-- basic audit - (success &amp;amp; failure) 
+AUDIT DELETE ON hr.emp2;
+ 
+-- audit - (success &amp;amp; failure) by access
+AUDIT DELETE ON hr.emp2 by access;
+ 
+SELECT OWNER, OBJECT_NAME, OBJECT_TYPE, INS, UPD, DEL
+FROM DBA_OBJ_AUDIT_OPTS
+WHERE OBJECT_NAME = 'EMP2'; 
+ 
+-- audit - (failure) by session
+AUDIT DELETE ON hr.emp2 by session Whenever Not Successful;
+ 
+-- audit - (success) by access
+AUDIT DELETE ON hr.emp2 by access  Whenever Successful;
+ 
+ 
+-- NOAUDIT OPTIONS
+------------------
+AUDIT ALL ON hr.emp2 ; 
+NOAUDIT DELETE ON hr.emp2 ;
+ 
+AUDIT ALL ON hr.emp2 ; 
+NOAUDIT ALL ON hr.emp2 ; 
+ 
+AUDIT ALL ON hr.emp2 ; 
+NOAUDIT DELETE ON hr.emp2 Whenever Not Successful;
+ 
+ 
+-- 3. Review the audited actions 
+--------------------------------
+ 
+------------ Demo 
+ 
+AUDIT CREATE SESSION Whenever Successful;
+AUDIT DELETE ON hr.emp2 by access;
+AUDIT CREATE ANY TABLE;
+AUDIT UPDATE ON hr.emp2 by access;
+ 
+----------- Actions 
+ 
+grant create any table to hr;
+ 
+conn hr/hr@pdborcl
+ 
+DELETE FROM emp2 WHERE salary &gt; 10000;
+ 
+CREATE TABLE sh.cacthme3(id number);
+ 
+UPDATE hr.emp2 SET salary = salary - 1000 ; 
+ 
+conn sys/password@pdborcl as sysdba
+ 
+UPDATE hr.emp2 SET last_name = 'Kishkashta' ; 
+ 
+ 
+col username for a8
+col obj_name for a30
+col action_name for a20
+col os_username for a15
+col priv_used for a17
+col obj_name for a15
+ 
+SELECT USERNAME, OS_USERNAME, ACTION_NAME, OBJ_NAME, TO_CHAR(TIMESTAMP,'dd/mm/yyyy hh24:mi') Time
+FROM dba_audit_trail
+WHERE ACTION_NAME='DELETE';
+-- or 
+SELECT USERNAME, OS_USERNAME, ACTION_NAME, OBJ_NAME, TO_CHAR(TIMESTAMP,'dd/mm/yyyy hh24:mi') Time
+FROM dba_audit_trail
+WHERE OBJ_NAME='EMP2';
+ 
+SELECT USERNAME, OS_USERNAME, ACTION_NAME, OBJ_NAME, 
+TO_CHAR(TIMESTAMP,'dd/mm/yyyy hh24:mi') Time,  PRIV_USED
+FROM dba_audit_trail
+WHERE ACTION_NAME='CREATE TABLE' ;
+ 
+SELECT table_name , owner
+FROM dba_tables
+WHERE table_name = 'TEST';
+ 
+-- How to audit actions made by sys ? 
+-------------------------------------
+ 
+SHOW PARAMETER AUDIT_SYS_OPERATIONS 
+ALTER SYSTEM SET AUDIT_SYS_OPERATIONS = TRUE SCOPE = SPFILE ;
+ 
+STARTUP FORCE
+ 
+UPDATE hr.emp2 SET last_name = 'Kishkashta again' ; 
+ 
+SELECT USERNAME, OS_USERNAME, ACTION_NAME, OBJ_NAME, TO_CHAR(TIMESTAMP,'dd/mm/yyyy hh24:mi') Time
+FROM dba_audit_trail
+WHERE OBJ_NAME='EMP2'
+ 
+-- * All audit records for SYS are written to the operating system file that contains 
+--   the audit trail, and not to DBA_AUDIT_TRAIL
+--   ALTER SYSTEM SET AUDIT_SYS_OPERATIONS = FALSE SCOPE = SPFILE
+ 
+-- How to see the actual SQL command (DB_EXTENDED)
+--------------------------------------------------
+ 
+col sql_text for a30
+SELECT USERNAME, OS_USERNAME, ACTION_NAME, OBJ_NAME, 
+TO_CHAR(TIMESTAMP,'dd/mm/yyyy hh24:mi') Time, sql_text
+FROM dba_audit_trail
+WHERE OBJ_NAME='EMP2' ;
+ 
+ALTER SYSTEM SET AUDIT_TRAIL=DB_EXTENDED SCOPE=SPFILE;
+ 
+startup force
+ 
+SELECT USERNAME, OS_USERNAME, ACTION_NAME, OBJ_NAME, 
+TO_CHAR(TIMESTAMP,'dd/mm/yyyy hh24:mi') Time, sql_text
+FROM dba_audit_trail
+WHERE OBJ_NAME='EMP2' ;
+ 
+conn hr/hr
+ 
+update emp2 set salary = salary + 10 ;
+ 
+conn / as sysdba 
+ 
+SELECT USERNAME, OS_USERNAME, ACTION_NAME, OBJ_NAME, 
+TO_CHAR(TIMESTAMP,'dd/mm/yyyy hh24:mi') Time, sql_text
+FROM dba_audit_trail
+WHERE OBJ_NAME='EMP2' ;
+ 
+ALTER SYSTEM SET AUDIT_TRAIL=DB SCOPE=SPFILE;
+ 
+ 
+--  Test for failed logon attempts, grouped per day.
+----------------------------------------------------
+ 
+col username for a15
+col terminal for a6
+col timestamp for a15
+col logoff_time for a15
+col action_name for a8
+col returncode for 9999
+col OS_USERNAME for a20
+ 
+select count(*),username,terminal,to_char(timestamp,'DD-MON-YYYY')
+from dba_audit_session
+where returncode&amp;lt;&gt;0
+group by username,terminal,to_char(timestamp,'DD-MON-YYYY')
+ 
+ 
+-- Check for attempts to access the database with non existant users. This could
+-- indicate someone trying to guess user names and passwords.
+--------------------------------------------------------------------------------
+ 
+select username,terminal,to_char(timestamp,'DD-MON-YYYY HH24:MI:SS')
+from dba_audit_session
+where returncode&amp;lt;&gt;0
+and not exists (select 'x'
+   from dba_users
+   where dba_users.username=dba_audit_session.username)
+ 
+-- Logons list for specific user : 
+---------------------------------
+ 
+col userhost for a15
+set lines 200
+SELECT username , os_username , to_char(timestamp,'DD-MON-YYYY HH:MM:SS') AS "TIME"
+from dba_audit_session
+where username = '&amp;amp;username'
+order by timestamp DESC
+ 
+--------------------------------------------
+-- Maintenance
+--------------------------------------------
+ 
+-- 1. by a manual delete from SYS.AUD$
+-- 2. by using plsql
+-- 3. by moving / exporting the SYS.AUD$ contents somewhere else 
+  
+DESC SYS.AUD$
+ 
+DELETE FROM sys.aud$ WHERE obj$name='&amp;amp;table_name';
+ 
+DELETE FROM sys.aud$ WHERE USERID = '&amp;amp;username';
+ 
+create or replace procedure purge_audit_trail (days in number)
+as
+purge_date date;
+begin
+purge_date := trunc(sysdate-days);
+dbms_output.put_line('AUDIT: Purging Audit Trail until ' || purge_date ||' started');
+delete from aud$ where ntimestamp# &amp;lt; purge_date;
+commit;
+dbms_output.put_line('AUDIT: Purging Audit Trail until ' ||       purge_date || ' has completed'); end;
+ 
+------------------------------------
+-- Via OEM
+------------------------------------
+-- * Can add auditing and view audit trails from:
+--   Server =&gt; (Security) =&gt; Audit Settings
+-- * View the trails at the "Audit Trails" section.
+ 
+ 
+-------------------------------------------------------------------------------------------
+-- FINE GRAINED AUDITING - DBMS_FGA / DBA_FGA_AUDIT_TRAIL
+-------------------------------------------------------------------------------------------
+ 
+-- FGA demo:
+ 
+-- DBMS_FGA (ADD/DROP, ENABLE/DISABLE)
+desc dbms_fga  
+ 
+begin
+    dbms_fga.add_policy (
+      object_schema        =&gt; 'HR',
+      object_name          =&gt; 'EMPLOYEES',
+      policy_name          =&gt; 'audit_emps_salary',
+      audit_condition      =&gt; 'department_id=10',
+      audit_column         =&gt; 'SALARY,COMMISSION_PCT',
+      enable               =&gt;  TRUE,
+      statement_types      =&gt; 'SELECT,UPDATE');
+end;
+ 
+conn hr/hr@pdborcl
+SELECT last_name, salary FROM hr.employees WHERE department_id=10;
+ 
+-- Audited?
+conn sys/password@pdborcl as sysdba
+desc dba_fga_audit_trail
+ 
+col sql_text for a20
+col sql_text for a20
+ 
+SELECT db_user, sql_text, TO_CHAR(timestamp,'dd/mm/yyyy hh24:mi')
+FROM dba_fga_audit_trail;
+ 
+exec dbms_fga.drop_policy('HR','EMPLOYEES','audit_emps_salary')
+ 
+TRUNCATE TABLE fga_log$;
+ 
+SELECT sql_text FROM dba_fga_audit_trail;
+ 
+-------------------------------------------------------------------------------------------
+-- Value Based Auditing - AFTER DML TRIGGER - log the change that was made
+-------------------------------------------------------------------------------------------
+-- * Database auditing records the inserts, updates, and deletes that have occurred 
+--   in audited objects but does not capture the actual values that are changed. 
+-- * To extend database auditing, value-based auditing leverages database triggers 
+--   (event-driven PL/SQL constructs) to capture the changed values.
+ 
+-------------------------------------------------------------------------------------------
+-- STATEMENT LEVEL TRIGGER:
+ 
+-- Disable the last trigger:
+--ALTER TRIGGER check_time_emp DISABLE;
+ 
+DROP TABLE log_emp;
+ 
+--Create a log table 
+DROP TABLE log_emp;
+CREATE TABLE log_emp
+(username VARCHAR2(10),
+dml_time VARCHAR2(20),
+action VARCHAR2(10));
+ 
+--Create the trigger:
+CREATE OR REPLACE TRIGGER log_emp_trig
+AFTER INSERT OR UPDATE OR DELETE
+ON employees
+DECLARE
+  v_Action        VARCHAR2(10);
+BEGIN
+  IF INSERTING THEN v_Action:='INSERT';
+  ELSIF UPDATING THEN v_Action:='UPDATE';
+  ELSE v_Action:='DELETE';
+  END IF;
+  INSERT INTO log_emp
+  VALUES (USER,TO_CHAR(SYSDATE,'DD-MON-YY HH24:MI:SS'),v_action);
+END;
+ 
+--Use it:
+ 
+UPDATE employees SET salary=salary+100;
+ 
+INSERT INTO employees (employee_id,last_name,first_name,hire_date,job_id,email,department_id)
+VALUES (5555,USER,USER,SYSDATE,'SA_REP',USER||'@HOTMAIL.COM',50);
+ 
+DELETE employees WHERE employee_id=5555;
+ 
+SELECT * FROM log_emp;
+ 
+--Try to delete -&gt; constraint in place, the delete fails and the trigger was not triggered:
+DELETE employees WHERE employee_id=100;
+ 
+SELECT * FROM log_emp;
+ 
+-------------------------------------------------------------------------------------------
+-- FOR EACH ROW
+ 
+DROP TABLE log_Emp;
+ 
+--Create log table
+CREATE TABLE log_emp
+(username VARCHAR2(10),
+dml_time VARCHAR2(20),
+old_emp_id NUMBER,
+new_emp_id NUMBER,
+old_salary NUMBER,
+new_salary NUMBER);
+ 
+DESC log_Emp
+ 
+--Create trigger
+CREATE OR REPLACE TRIGGER log_emp_trig
+AFTER INSERT OR UPDATE OR DELETE ON employees
+FOR EACH ROW
+BEGIN
+  INSERT INTO log_emp
+  VALUES (USER,TO_CHAR(SYSDATE,'DD-MON-YY HH24:MI:SS'),
+  :OLD.employee_id,:NEW.employee_id,
+  :OLD.salary,:NEW.salary);
+END;
+ 
+--Use it
+ 
+SELECT * FROM log_emp;
+ 
+UPDATE employees 
+SET salary=salary+2000 
+WHERE employee_id BETWEEN 100 AND 105;
+ 
+SELECT * FROM log_emp;
+ 
+--Use it again- not all columns will have values in the log table
+ 
+INSERT INTO employees (employee_id,last_name,first_name,hire_date,job_id,email,department_id)
+VALUES (5555,USER,USER,SYSDATE,'SA_REP',USER||'@HOTMAIL.COM',50);
+ 
+DELETE employees WHERE employee_id=5555;
+ 
+SELECT * FROM log_emp;
+ 
+-------------------------------------------------------------------------------------------
+-- Example for using WHEN
+ 
+CREATE OR REPLACE TRIGGER check_sal_diff
+BEFORE UPDATE OF salary ON employees
+FOR EACH ROW
+WHEN ((NEW.salary - OLD.salary) &gt; 2000)
+BEGIN
+ RAISE_APPLICATION_ERROR(-20000,'The Difference is too large.');
+END;
+ 
+-- Check the trigger
+update employees set salary=salary +2500;
+ 
+update employees set salary=salary +1500;
+ 
+-------------------------------------------------------------------------------------------
+-- autonomous_transaction
+-------------------------------------------------------------------------------------------
+SELECT * FROM log_emp;
+ 
+ROLLBACK;
+ 
+SELECT * FROM log_emp;
+ 
+-- Try to solve it with using commit in the trigger
+ 
+CREATE OR REPLACE TRIGGER log_emp_trig
+AFTER INSERT OR UPDATE OR DELETE ON employees
+FOR EACH ROW
+BEGIN
+  INSERT INTO log_emp
+  VALUES (USER,TO_CHAR(SYSDATE,'DD-MON-YY HH24:MI:SS'),
+    :OLD.employee_id,:NEW.employee_id,
+    :OLD.salary,:NEW.salary);
+  COMMIT;
+END;
+/
+ 
+-- Try to use the trigger
+update employees set salary=salary+500;
+ 
+-------------------------------------------------------------------------------------------
+--Solution: PRAGMA AUTONOMOUS_TRANSACTION;
+ 
+CREATE OR REPLACE TRIGGER log_emp_trig
+AFTER INSERT OR UPDATE OR DELETE ON employees
+FOR EACH ROW
+DECLARE
+    PRAGMA AUTONOMOUS_TRANSACTION;
+BEGIN
+    INSERT INTO log_emp
+    VALUES (USER,TO_CHAR(SYSDATE,'DD-MON-YY HH24:MI:SS'),
+      :OLD.employee_id,:NEW.employee_id,
+      :OLD.salary,:NEW.salary);
+    COMMIT;
+END;
+ 
+--Use it:
+ 
+update employees set salary=salary+500;
+ 
+SELECT salary FROM employees;
+ 
+SELECT * FROM log_emp;
+ 
+--Rollback and see that the changes where saved in the log table:
+ROLLBACK;
+SELECT salary FROM employees;
+SELECT * FROM log_emp;
+ 
+-------------------------------------------------------------------------------------------
+-- AUTONOMOUS_TRANSACTION Without Commiting
+ 
+CREATE OR REPLACE TRIGGER log_emp_trig
+AFTER INSERT OR UPDATE OR DELETE ON employees
+FOR EACH ROW
+DECLARE
+  PRAGMA AUTONOMOUS_TRANSACTION;
+BEGIN
+  INSERT INTO log_emp
+  VALUES (USER,TO_CHAR(SYSDATE,'DD-MON-YY HH24:MI:SS'),
+  :OLD.employee_id,:NEW.employee_id,
+  :OLD.salary,:NEW.salary);
+END;
+ 
+-- Try to Use It
+ 
+update employees set salary=salary+500;
+ 
+-----------------------------------------------
+-- If I want to know if succeded or failed:
+-----------------------------------------------
+ 
+ 
+DROP TABLE log_Emp;
+DROP SEQUENCE log_emp_seq;
+DROP FUNCTION log_emp_func;
+ 
+ 
+--Create log table
+CREATE TABLE log_emp
+(log_id NUMBER,
+ username VARCHAR2(10),
+dml_time VARCHAR2(20),
+emp_id NUMBER,
+old_salary NUMBER,
+new_salary NUMBER,
+Status VARCHAR2(10) DEFAULT 'Failed');
+ 
+CREATE SEQUENCE log_emp_seq;
+ 
+CREATE OR REPLACE FUNCTION log_emp_func
+(p_user VARCHAR2,
+ p_date VARCHAR2,
+ p_emp_id NUMBER,
+ p_old_salary NUMBER,
+ p_new_salary NUMBER) 
+RETURN NUMBER
+IS 
+  PRAGMA AUTONOMOUS_TRANSACTION;
+  v_log_id NUMBER;
+BEGIN
+  INSERT INTO log_emp
+  VALUES (log_emp_seq.NEXTVAL, p_user, p_date, p_emp_id, p_old_salary, p_new_salary,DEFAULT)
+  RETURNING log_id INTO v_log_id;
+ 
+  COMMIT;
+ 
+  RETURN v_log_id;
+END;
+/
+ 
+CREATE OR REPLACE TRIGGER log_emp_trig
+AFTER UPDATE OF salary ON employees
+FOR EACH ROW
+DECLARE
+  v_log_id NUMBER;
+BEGIN
+  v_log_id := log_emp_func(USER,TO_CHAR(SYSDATE,'DD-MON-YY HH24:MI:SS'),
+        :OLD.employee_id, :OLD.salary,:NEW.salary);
+ 
+  UPDATE log_emp
+  SET status = 'Success'
+  WHERE log_id = v_log_id;
+END;
+/
+ 
+UPDATE employees 
+SET salary=salary+500
+WHERE employee_id BETWEEN 100 AND 103;
+ 
+SELECT salary FROM employees
+WHERE employee_id BETWEEN 100 AND 103;
+ 
+SELECT * FROM log_emp;
+ 
+--Rollback and see that the changes where saved in the log table:
+ROLLBACK;
