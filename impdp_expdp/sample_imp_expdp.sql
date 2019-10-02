@@ -16,9 +16,13 @@ expdp directory=pump dumpfile=XX0205.dmp_%U logfile=XX0205.log schemas=XXX flash
 
 
 
-
-
-
 expdp file=XXX13092019.dmp log=XXX13092019 OWNER=XXX directory=DATA_PUMP_DIR GRANTS=y ROWS=y
+
+
 expdp dumpfile=LF6092019.dmp_%U log=LF16092019 OWNER=LF directory=DATA_PUMP_DIR GRANTS=y ROWS=y
+
+
 impdp system DIRECTORY=DATA_PUMP_DIR DUMPFILE=XXX13092019.dmp REMAP_SCHEMA=SOURCE_SCHEMA_NAME:NEW_SCHEMA_NAME
+
+-- single table
+impdp file=xxx.dmp log=xxx.log tables=<schema_name>.<table_name>
