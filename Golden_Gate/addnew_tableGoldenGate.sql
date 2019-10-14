@@ -7,16 +7,6 @@ GGSCI (hostname) 2>
 
 2. Add trandata for new table
 
-
-
-SQL> ALTER TABLE XXX.XX_TABLE ADD SUPPLEMENTAL LOG DATA (ALL) COLUMNS;
-
-Table altered.
-
-SQL> ALTER TABLE XXX.XX_TABLE2 ADD SUPPLEMENTAL LOG DATA (ALL) COLUMNS;
-
-Table altered.
-
 GGSCI (hostname) 2> dblogin userid ogg, password n88E84XRsN
 
 GGSCI (hostname) 2> add trandata XXX.XX_TABLE
