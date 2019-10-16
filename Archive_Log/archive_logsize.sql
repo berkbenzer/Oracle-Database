@@ -1,11 +1,18 @@
---Daily
-select trunc(COMPLETION_TIME,'DD') Day, thread#, 
-round(sum(BLOCKS*BLOCK_SIZE)/1024/1024/1024) GB,
-count(*) Archives_Generated from v$archived_log 
-group by trunc(COMPLETION_TIME,'DD'),thread# order by 1;
+/*DAILY */
+  SELECT TRUNC (COMPLETION_TIME, 'DD') Day,
+         thread#,
+         ROUND (SUM (BLOCKS * BLOCK_SIZE) / 1024 / 1024 / 1024) GB,
+         COUNT (*) Archives_Generated
+    FROM v$archived_log
+GROUP BY TRUNC (COMPLETION_TIME, 'DD'), thread#
+ORDER BY 1;
 
---Hourly
-select trunc(COMPLETION_TIME,'HH') Hour,thread# , 
-round(sum(BLOCKS*BLOCK_SIZE)/1024/1024/1024) GB,
-count(*) Archives from v$archived_log 
-group by trunc(COMPLETION_TIME,'HH'),thread#  order by 1 ;
+
+/* HOURLY */
+  SELECT TRUNC (COMPLETION_TIME, 'HH') Hour,
+         thread#,
+         ROUND (SUM (BLOCKS * BLOCK_SIZE) / 1024 / 1024 / 1024) GB,
+         COUNT (*) Archives
+    FROM v$archived_log
+GROUP BY TRUNC (COMPLETION_TIME, 'HH'), thread#
+ORDER BY 1;
