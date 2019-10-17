@@ -28,8 +28,10 @@ ORDER BY 1;
 
 --Step 3 & 4: Check redo received and applied on standby. 
 
-STANDBY@SQL> SELECT ARCH.THREAD# “Thread”, ARCH.SEQUENCE# “Last Sequence Received”,
-APPL.SEQUENCE# “Last Sequence Applied”, (ARCH.SEQUENCE# – APPL.SEQUENCE#) “Difference”
+STANDBY@SQL> SELECT ARCH.THREAD# "Thread",
+       ARCH.SEQUENCE# "Last Sequence Received",
+       APPL.SEQUENCE# "Last Sequence Applied"--,
+     --  (ARCH.SEQUENCE#) – (APPL.SEQUENCE#) "Difference"
 FROM
 (SELECT THREAD# ,SEQUENCE# FROM V$ARCHIVED_LOG WHERE (THREAD#,FIRST_TIME ) IN
 (SELECT THREAD#,MAX(FIRST_TIME) FROM V$ARCHIVED_LOG GROUP BY THREAD#)) ARCH,
