@@ -1,0 +1,56 @@
+/*
+If your primary database is not accessible or crashed for any issue, then we can use open the standby database for use.
+
+Below are the steps for opening standby database when the primary database is lost:
+*/
+ 
+--1. start the standby database in mount stage:[ STANDBY]
+
+ 
+shut immediate;
+startup mount;
+ 
+--2. Check the protection_mode and database_role
+
+ 
+ 
+SQL> SELECT OPEN_MODE,PROTECTION_MODE,DATABASE_ROLE FROM V$DATABASE;
+
+OPEN_MODE     PROTECTION_MODE            DATABASE_ROLE
+----------   --------------------      ----------------
+MOUNTED       MAXIMUM PERFORMANCE      PHYSICAL STANDBY
+ 
+NOTE: If protection_mode is other than maximum performance, then alter it as below.
+
+SQL> ALTER DATABASE SET STANDBY DATABASE TO MAXIMIZE PERFORMANCE;
+
+--3. Recover standby database:[ STANDBY]
+
+ 
+ 
+SQL> RECOVER STANDBY DATABASE;
+ 
+Make sure all archives has been applied in this process.
+
+--4. Finish the recovery process:
+ 
+SQL> ALTER DATABASE RECOVER MANAGED STANDBY DATABASE FINISH;
+Database altered
+ 
+--5. Activate the standby database:
+ 
+ 
+SQL> ALTER DATABASE ACTIVATE PHYSICAL STANDBY DATABASE;
+Database altered.
+ 
+--6. Check the status:
+
+ 
+SQL> SELECT OPEN_MODE,PROTECTION_MODE,DATABASE_ROLE FROM V$DATABASE;
+OPEN_MODE     PROTECTION_MODE            DATABASE_ROLE
+----------   --------------------      ----------------
+MOUNTED       MAXIMUM PERFORMANCE        PRIMARY
+ 
+--7. Open the database:
+
+Now application can start using this database.
