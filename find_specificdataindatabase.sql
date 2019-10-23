@@ -22,7 +22,7 @@ BEGIN
             FROM all_tab_cols atc
            WHERE atc.owner = v_owner
              AND data_type =  v_data_type
-             -- esclude vir. columns
+             -- exclude vir. columns
              AND atc.column_id is not null
              -- exclude views
              AND not exists (select 1 
