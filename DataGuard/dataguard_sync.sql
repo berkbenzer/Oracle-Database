@@ -55,18 +55,18 @@ BACKUP CURRENT CONTROLFILE FOR STANDBY FORMAT '/tmp/ForStandbyCTRL.bck';
 
 
 
-MAN> recover database noredo;
+RMAN> recover database noredo;
 
 Starting recover at 21-OCT-19
 allocated channel: ORA_DISK_1
 channel ORA_DISK_1: SID=502 device type=DISK
 channel ORA_DISK_1: starting incremental datafile backup set restore
 channel ORA_DISK_1: specifying datafile(s) to restore from backup set
-destination for restore of datafile 00001: /u01/app/oracle/oradata/oclaim/system01.dbf
-destination for restore of datafile 00002: /u01/app/oracle/oradata/oclaim/sysaux01.dbf
-destination for restore of datafile 00003: /u01/app/oracle/oradata/oclaim/undotbs01.dbf
-destination for restore of datafile 00004: /u01/app/oracle/oradata/oclaim/users01.dbf
-destination for restore of datafile 00005: /u01/app/oracle/oradata/oclaim/cardif_oclm01.dbf
+destination for restore of datafile 00001: /u01/app/oracle/oradata/xxx/system01.dbf
+destination for restore of datafile 00002: /u01/app/oracle/oradata/xxx/sysaux01.dbf
+destination for restore of datafile 00003: /u01/app/oracle/oradata/xxx/undotbs01.dbf
+destination for restore of datafile 00004: /u01/app/oracle/oradata/xxx/users01.dbf
+destination for restore of datafile 00005: /u01/app/oracle/oradata/xxx/xxx01.dbf
 channel ORA_DISK_1: reading from backup piece /tmp/ForStandby_76ues4j3_1_1
 RMAN-00571: ===========================================================
 RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
@@ -105,11 +105,11 @@ allocated channel: ORA_DISK_1
 channel ORA_DISK_1: SID=74 device type=DISK
 channel ORA_DISK_1: starting incremental datafile backup set restore
 channel ORA_DISK_1: specifying datafile(s) to restore from backup set
-destination for restore of datafile 00001: /u01/app/oracle/oradata/oclaim/system01.dbf
-destination for restore of datafile 00002: /u01/app/oracle/oradata/oclaim/sysaux01.dbf
-destination for restore of datafile 00003: /u01/app/oracle/oradata/oclaim/undotbs01.dbf
-destination for restore of datafile 00004: /u01/app/oracle/oradata/oclaim/users01.dbf
-destination for restore of datafile 00005: /u01/app/oracle/oradata/oclaim/cardif_oclm01.dbf
+destination for restore of datafile 00001: /u01/app/oracle/oradata/xxx/system01.dbf
+destination for restore of datafile 00002: /u01/app/oracle/oradata/xxx/sysaux01.dbf
+destination for restore of datafile 00003: /u01/app/oracle/oradata/xxx/undotbs01.dbf
+destination for restore of datafile 00004: /u01/app/oracle/oradata/xxx/users01.dbf
+destination for restore of datafile 00005: /u01/app/oracle/oradata/xxx/xxx01.dbf
 channel ORA_DISK_1: reading from backup piece /tmp/ForStandby_76ues4j3_1_1
 channel ORA_DISK_1: piece handle=/tmp/ForStandby_76ues4j3_1_1 tag=FORSTANDBY
 channel ORA_DISK_1: restored backup piece 1
