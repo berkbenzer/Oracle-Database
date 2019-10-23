@@ -82,6 +82,9 @@ SQL> shutdown immediate;
 Database closed.
 Database dismounted.
 ORACLE instance shut down.
+
+
+
 SQL> startup mount;
 ORACLE instance started.
 
