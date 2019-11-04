@@ -23,3 +23,12 @@ unzip dbsat.zip
 
 --In order to create html and xls file you need execute command below
 ./dbsat report fehhrouut
+
+
+--if dbsat returns an error
+ERROR at line 49:
+ORA-06550: line 49, column 42:
+PLS-00201: identifier 'SYS.DBMS_SQL' must be declared
+
+
+grant execute on DBMS_SQL to DBSAT_USER;
