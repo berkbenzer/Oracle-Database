@@ -25,6 +25,7 @@ expdp dumpfile=LF6092019.dmp_%U log=LF16092019 OWNER=LF directory=DATA_PUMP_DIR 
 impdp system DIRECTORY=DATA_PUMP_DIR DUMPFILE=XXX13092019.dmp REMAP_SCHEMA=SOURCE_SCHEMA_NAME:NEW_SCHEMA_NAME
 
 -- Single table
+expdp directory=DATA_PUMP_DIR dumpfile=table_name.dmp%U logfile=table_name.log tables=bnppko.table_name
 impdp file=xxx.dmp log=xxx.log tables=<schema_name>.<table_name>
 
 --Multiple Table
