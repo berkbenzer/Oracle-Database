@@ -44,17 +44,18 @@ RMAN> connect target /
 
 connected to target database: XXXX (DBID=234748998)
 
+RMAN> BACKUP INCREMENTAL FROM SCN 33538563 DATABASE FORMAT '/tmp/ForStandby_%U' tag 'FORSTANDBY'
 
-
-BACKUP INCREMENTAL FROM SCN 33538563 DATABASE FORMAT '/tmp/ForStandby_%U' tag 'FORSTANDBY'
-
-BACKUP CURRENT CONTROLFILE FOR STANDBY FORMAT '/tmp/ForStandbyCTRL.bck';
-
+RMAN> BACKUP CURRENT CONTROLFILE FOR STANDBY FORMAT '/tmp/ForStandbyyCTRL.bck';
 
 
 
+--send backup files to standayby db or dr machine
+
+scp /tmp/ForStandby_* standby:/tmp
 
 
+--ON STANDBY DATABASE
 RMAN> recover database noredo;
 
 Starting recover at 21-OCT-19
