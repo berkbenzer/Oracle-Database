@@ -1,0 +1,73 @@
+ WARNING: db_recovery_file_dest_size of 17179869184 bytes is 100.00% used, and has 0 remaining bytes available.
+ 
+ 
+ 
+ 2019-11-19T15:01:26.720890+03:00
+Errors in file /u01/app/oracle/diag/rdbms/sttstlu/sttstlu/trace/sttstlu_arc3_4456.trc:
+ORA-19815: WARNING: db_recovery_file_dest_size of 17179869184 bytes is 100.00% used, and has 0 remaining bytes available.
+2019-11-19T15:01:26.720933+03:00
+Errors in file /u01/app/oracle/diag/rdbms/sttstlu/sttstlu/trace/sttstlu_arc2_4454.trc:
+ORA-19809: limit exceeded for recovery files
+ORA-19804: cannot reclaim 195910656 bytes disk space from 17179869184 bytes limit
+2019-11-19T15:01:26.721173+03:00
+ARC2 (PID:4454): Error 19809 Creating archive log file to '/u01/app/oracle/fast_recovery_area/STTSTLU/archivelog/2019_11_19/o1_mf_1_115_%u_.arc'
+2019-11-19T15:01:26.721180+03:00
+
+
+
+select * from v$flash_recovery_area_usage;
+
+ARCHIVED LOG	98.43	0	95	0
+
+
+--solution
+
+SQL> show parameter db_recovery;
+
+NAME				     TYPE	 VALUE
+------------------------------------ ----------- ------------------------------
+db_recovery_file_dest		     string	 /u01/app/oracle/fast_recovery_
+						 area
+db_recovery_file_dest_size	     big integer 4G
+
+
+
+SQL> ALTER SYSTEM SET DB_RECOVERY_FILE_DEST_SIZE = 16G SCOPE=BOTH;
+
+SQL> show parameter db_recovery;
+
+NAME				     TYPE	 VALUE
+------------------------------------ ----------- ------------------------------
+db_recovery_file_dest		     string	 /u01/app/oracle/fast_recovery_
+						 area
+db_recovery_file_dest_size	     big integer 16G
+
+SQL> alter database open;
+
+Database altered.
+
+SQL> alter system register;
+
+System altered.
+
+SQL> exit
+
+~]# rman target /
+
+RMAN> DELETE ARCHIVELOG ALL COMPLETED BEFORE 'SYSDATE-3'
+
+RMAN> crosscheck archivelog all;
+
+RMAN> delete expired archivelog all;
+
+~]# lsnrctl status
+
+
+
+
+
+
+
+
+
+
