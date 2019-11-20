@@ -1,0 +1,148 @@
+/*
+					******MULTITENENANT DATABASE******
+
+	
+	
+	--To move schema from 11g to another db need do manual operations.
+
+	12c
+	--In multitenant db's  share one instance.
+	--Can support multıple databases
+	--It support 253 pdb.
+	--They shared
+	--You can backup single db
+	
+	
+		THE CDB "SUPER DATABASE"
+	
+	--CDB is a database which contains sub databases.
+
+
+
+					******CDB******
+					
+	-- CDB contains one or multiple PDB's.
+	-- Root container is a collection of Oracle supplies objects metadata.
+	-- PDB is a collection of schemas tables and objects.Which directly support an application.
+	-- Applications connect directly to the PDB's which in CDB's.
+	
+	
+	
+					******ROOT CONTAINER******
+
+	-- Every CDB has one root container.
+	-- CDB$root 
+	-- It contains metadata for oracle-supplied objects
+		Redo Logs			Flashback 		Archived Logs
+		Control Fıles		UNDO TEMP SYSAUX SYSTEM
+	
+
+		SEED PDB
+	-- Seed PDB only for the cloning new pdb inside our CDB. it does serve to applications
+	-- It's a template.
+	-- Datbase files (system,temp and sytsaux) copies from seed PDB while creating new PDB
+	-- When installation completed new pdb plugged to Container Database via Root Container
+	
+	
+					******INSTALLATION******
+					
+		1- Create Database
+		2- Advanced Mode
+		3- Select Type of Database
+		4- Select Create as Container Database
+			This selection enables multitenant architecture otherwise it acts like 11g
+				If you select 'Create an Empty Container Database' it only creates empty root container and seed container
+
+		
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+					******MULTITENENANT DATABASE******
+
+	
+	
+	--To move schema from 11g to another db need do manual operations.
+
+	12c
+	--In multitenant db's  share one instance.
+	--Can support multıple databases
+	--It support 253 pdb.
+	--They shared
+	--You can backup single db
+	
+	
+		THE CDB "SUPER DATABASE"
+	
+	--CDB is a database which contains sub databases.
+
+
+
+					******CDB******
+					
+	-- CDB contains one or multiple PDB's.
+	-- Root container is a collection of Oracle supplies objects metadata.
+	-- PDB is a collection of schemas tables and objects.Which directly support an application.
+	-- Applications connect directly to the PDB's which in CDB's.
+	
+	
+	
+					******ROOT CONTAINER******
+
+	-- Every CDB has one root container.
+	-- CDB$root 
+	-- It contains metadata for oracle-supplied objects
+		Redo Logs			Flashback 		Archived Logs
+		Control Fıles		UNDO TEMP SYSAUX SYSTEM
+	
+
+		SEED PDB
+	-- Seed PDB only for the cloning new pdb inside our CDB. it does serve to applications
+	-- It's a template.
+	-- Datbase files (system,temp and sytsaux) copies from seed PDB while creating new PDB
+	-- When installation completed new pdb plugged to Container Database via Root Container
+	
+	
+					******INSTALLATION******
+					
+		1- Create Database
+		2- Advanced Mode
+		3- Select Type of Database
+		4- Select Create as Container Database
+			This selection enables multitenant architecture otherwise it acts like 11g
+				If you select 'Create an Empty Container Database' it only creates empty root container and seed container
+
+		
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
