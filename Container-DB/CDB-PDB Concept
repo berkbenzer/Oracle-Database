@@ -133,13 +133,49 @@
 
 
 
-
+--In order Connect EM you need execute command below
 
 SQL> exec dbms_xdb_config.setglobalportenabled(TRUE);
 
 PL/SQL procedure successfully completed.
+--https://xx.xx.xxx.xxx:5500/em
 
 
+
+
+/*
+
+
+
+CREATE PLUGGABLE DATABASE
+
+
+*/
+--Connect to root Container DB
+SQL> show con_name
+
+CON_NAME
+------------------------------
+CDB$ROOT
+
+SQL> 
+
+
+CREATE PLUGGABLE DATABASE my_new_pdb
+ADMIN USER my_pdb_admin IDENTIFIED BY password
+ROLES = (dba)
+DEFAULT TABLESPACE my_tbs 
+DATAFILE '/u01/app/oracle/oradata/orcl/my_new_pdb/mytbs01.dbf' SIZE 50M AUTOEXTEND ON
+FILE_NAME_CONVERT=('/u01/app/oracle/oradata/orcl/','/u01/app/oracle/oradata/ORCL/my_new_pdb/');  -- when we create pdb oracle copy seedpdb file so in order to avoid that we need to convert datafile name 
+
+alter pluggable database my_new_pdb open;
+
+
+select con_id, name from v$pdbs;
+
+
+--2	PDB$SEED
+--4	MY_NEW_PDB
 
 
 
