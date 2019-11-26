@@ -135,6 +135,9 @@
 
 
 
+SQL> exec dbms_xdb_config.setglobalportenabled(TRUE);
+
+PL/SQL procedure successfully completed.
 
 
 
