@@ -63,3 +63,22 @@ NAME				     TYPE	 VALUE
 ------------------------------------ ----------- ------------------------------
 shared_pool_size		     big integer 2G
 SQL> 
+
+
+
+
+
+
+SQL> exec dbms_xdb_config.SetGlobalPortEnabled(TRUE);
+
+PL/SQL procedure successfully completed.
+
+SQL> show con_name
+
+CON_NAME
+------------------------------
+CDB$ROOT
+SQL> 
+
+
+
