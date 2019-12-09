@@ -68,7 +68,7 @@ SQL>
 
 
 
-
+--before connect need setglobalport to Enable
 SQL> exec dbms_xdb_config.SetGlobalPortEnabled(TRUE);
 
 PL/SQL procedure successfully completed.
