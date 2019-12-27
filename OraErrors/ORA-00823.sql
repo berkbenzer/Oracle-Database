@@ -92,7 +92,7 @@ Database Buffers	 6291456000 bytes
 Redo Buffers		    9699328 bytes
 Database mounted.
 Database opened.
-SQL> 
+SQLL> 
 
 
 
