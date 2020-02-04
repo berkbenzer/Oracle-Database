@@ -1,14 +1,24 @@
+  SELECT owner,
+         job_name,
+         log_date,
+         status,
+         actual_start_date,
+         run_duration,
+         cpu_used
+    FROM dba_scheduler_job_run_details
+   WHERE 1 = 1 AND OWNER = 'XXXX'
+
+
 select * from  all_scheduler_job_run_details
 where 1=1
 and owner='XXX'
 AND STATUS ='SUCCEEDED'
-
+ORDER BY ACTUAL_START_DATE DESC
 
 SELECT *
 FROM DBA_SCHEDULER_JOB_RUN_DETAILS
 where 1=1
 and owner='XXXX'
---AND 
 ORDER BY LOG_DATE DESC;
 
 
