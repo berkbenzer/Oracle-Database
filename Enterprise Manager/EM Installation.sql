@@ -2,7 +2,9 @@
 
 --download files https://www.oracle.com/enterprise-manager/downloads/linux-x86-64-13c-rel3-downloads.html
 
-
+ rpm -qa --queryformat "%{NAME}-%{VERSION}-%{RELEASE}(%{ARCH})\n" | grep glibc-dev
+ 
+ 
 :/u01/oem13c]# ll
 total 9497120
 -rw-r--r--. 1 oracle oinstall 1742204641 Nov 27 15:24 em13300_linux64-2.zip
@@ -18,6 +20,24 @@ total 9497120
 [oracle@test:/u01/oem13c]# chmod 777 em13300_linux64.bin
 
 [oracle@test:/u01/oem13c]# ./em13300_linux64.bin
+
+alter system set "_optimizer_nlj_hj_adaptive_join"= FALSE scope=both sid='*'; 
+alter system set "_optimizer_strans_adaptive_pruning" = FALSE scope=both sid='*';
+ alter system set "_px_adaptive_dist_method" = OFF scope=both sid='*';
+ alter system set "_sql_plan_directive_mgmt_control" = 0 scope=both sid='*';
+ alter system set "_optimizer_dsdir_usage_control" = 0 scope=both sid='*';
+ alter system set "_optimizer_use_feedback" = FALSE scope=both sid='*';
+ alter system set "_optimizer_gather_feedback" = FALSE scope=both sid='*';
+ alter system set "_optimizer_performance_feedback" = OFF scope=both sid='*';
+ 
+ 
+ BEGIN
+  DBMS_AUTO_TASK_ADMIN.DISABLE(
+    client_name => 'auto optimizer stats collection',
+    operation => NULL,
+    window_name => NULL);
+END;
+/
 
 
 
@@ -40,6 +60,12 @@ parallel_max_servers		     integer	 160
 SQL> alter system set PARALLEL_MAX_SERVERS = 0 scope= both;
 
 System altered.
+
+
+#Prerequisite Recommendation = Temporarily disabling the gather stats job
+SQL>
+
+
 
 
 SQL> alter system set PARALLEL_MIN_SERVERS= 0 scope=both;
