@@ -19,7 +19,7 @@
 kernel.shmmax = 68719476736
 
 
-#16g memory 14.02.2020
+##Change to 16g memory 14.02.2020
 #kernel.shmmax = 17179869184
 
 
