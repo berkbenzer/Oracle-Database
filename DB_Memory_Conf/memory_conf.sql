@@ -79,8 +79,9 @@ sga_max_size			 big integer   5920M
 sga_target			     big integer   5920M
 SQL> shutdown immediate;
 SQL> startup mount;
-SQL> alter system set sga_max_size=16gb scope=both;
-SQL> alter system set sga_target=16gb   scope=both;
+SQL> alter system set sga_max_size=16G scope=both;
+SQL> alter system set sga_target=14G  scope=both;
+
 
 
 
