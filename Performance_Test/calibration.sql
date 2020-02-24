@@ -3,41 +3,36 @@
 
 
 /*
-DISKS
-MAX_LATENCY
-We recommend setting both parameters. 
-DISKS define the number of disks that we have in our LUN or LUNs.
-With new storage array technologies and huge LUNs this can be challenging to count. In this case a good starting point is 20.
 
-The MAX_LATENCY is a cool feature, as we discussed in our observations, it allows for setting a latency cap.
+The procedure must be called by a user with the SYSDBA priviledge.
+TIMED_STATISTICS must be set to TRUE, which is the default when STATISTICS_LEVEL is set to TYPICAL.
+Datafiles must be accessed using asynchronous I/O. This is the default when ASM is used.
+You can check your current asynchronous I/O setting for your datafiles using the following query.
 
-Here is our sample run of MAX_LATENCY set to 20 and DISKS set to 20. This is a good test to start with before tweaking the settings.
+
 */
 
+SELECT d.name,
+       i.asynch_io
+FROM   v$datafile d,
+       v$iostat_file i
+WHERE  d.file# = i.file_no
+AND    i.filetype_name  = 'Data File';
 
 
-SET SERVEROUTPUT ON
 
-DECLARE
+--To turn on asynchronous I/O, issue the following command and restart the database.
 
-lat  INTEGER;
+ALTER SYSTEM SET filesystemio_options=setall SCOPE=SPFILE;
 
-iops INTEGER;
 
-mbps INTEGER;
+SELECT d.name,
+       i.asynch_io
+FROM   v$datafile d,
+       v$iostat_file i
+WHERE  d.file# = i.file_no
+AND    i.filetype_name  = 'Data File';
 
-BEGIN
-
--- DBMS_RESOURCE_MANAGER.CALIBRATE_IO (, <MAX_LATENCY>, iops, mbps, lat);
-DBMS_RESOURCE_MANAGER.CALIBRATE_IO (20, 20, iops, mbps, lat);     DBMS_OUTPUT.PUT_LINE ('max_iops = ' || iops);
-
-DBMS_OUTPUT.PUT_LINE ('latency  = ' || lat);
-
-dbms_output.put_line('max_mbps = ' || mbps);
-
-end;
-
-/
 
 
 
