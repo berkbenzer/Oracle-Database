@@ -160,8 +160,7 @@ SYS        DATA_PUMP_DIR             /u01/app/oracle/admin/PSG01DAS/dpdump/     
 SQL>
 
 
-[oracle@rac1 ~]$ expdp \'/ as sysdba\' directory=data_pump_dir dumpfile=initload.dmp logfile=initload.log tables=XXX.XX_TABLE2,XXX.XX_TABLE flashback_scn=2298283
-
+[oracle@rac1 ~]$expdp \'/ as sysdba\' directory=data_pump_dir dumpfile=initload.dmp logfile=initload.log tables=XXX.XXXXX content=data_only flashback_scn=11315850875794
 Export: Release 12.2.0.1.0 - Production on Wed Apr 24 00:52:11 2019
 
 Copyright (c) 1982, 2017, Oracle and/or its affiliates.  All rights reserved.
