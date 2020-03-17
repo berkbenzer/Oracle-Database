@@ -1,3 +1,14 @@
+SELECT
+  (a.blocks*b.block_size)/1024/1024/1024 AS current_size,
+  (a.num_rows*a.avg_row_len)/1024/1024/1024 AS theorical_size,
+  ((a.blocks*b.block_size)-(a.num_rows*a.avg_row_len))/1024/1024/1024 AS gain,
+  (((a.blocks*b.block_size)-(a.num_rows*a.avg_row_len))*100/(a.blocks*b.block_size)) - a.pct_free AS percentage_gain
+FROM dba_tables a, dba_tablespaces b
+WHERE a.tablespace_name=b.tablespace_name
+AND owner = UPPER('XXX')
+AND table_name = UPPER('XXXX');
+
+
 /*
 
 It displays Table's Unused block,total blocks and High water mark.
