@@ -67,7 +67,7 @@ END;
 alter table xxx.xxx enable row movement;
 
 
-alter table xxx.xxx shrink SPACE; 
+alter table xxx.xxx shrink SPACE cascade; 
 
 /*
 
