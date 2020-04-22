@@ -12,6 +12,13 @@ connected to target database: TESTDB (DBID=2807463263)
 --start database backup
 RMAN> backup database plus archivelog;
 
+-- chech rman backup % completed
+sql>  SELECT SID, SERIAL#, CONTEXT, SOFAR, TOTALWORK,
+ ROUND (SOFAR/TOTALWORK*100, 2) "% COMPLETE"
+ FROM V$SESSION_LONGOPS
+ WHERE OPNAME LIKE 'RMAN%' AND OPNAME NOT LIKE '%aggregate%'
+ AND TOTALWORK! = 0 AND SOFAR <> TOTALWORK;
+
 
 RMAN> backup incremental level 0 database tag 'inc_level0' plus archivelog;
 
