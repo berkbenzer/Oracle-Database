@@ -1,0 +1,20 @@
+12.1.0.4.0/bin]# ./emctl control agent runCollection  oracle_database_name:oracle_database Response
+Oracle Enterprise Manager Cloud Control 12c Release 4  
+Copyright (c) 1996, 2014 Oracle Corporation.  All rights reserved.
+---------------------------------------------------------------
+EMD runCollection completed successfully
+
+[oracle@xxxx:/data/oracle/agent_oms/core/12.1.0.4.0/bin]# ./emctl getmetric agent  oracle_database_name, oracle_database, Response
+Oracle Enterprise Manager Cloud Control 12c Release 4  
+Copyright (c) 1996, 2014 Oracle Corporation.  All rights reserved.
+Invalid Target Metric specification: Invalid Target Specification: oracle_database_name,
+Usage:
+emctl getmetric agent TARGETNAME,TARGETTYPE,METRICNAME [-force]
+   Performs a realtime evaluation of the metric and displays the results for the specified metric
+   -force : (optional) if specified, evaluate the metric even if the target is in blackout
+[oracle@xxxx:/data/oracle/agent_oms/core/12.1.0.4.0/bin]# ./emctl getmetric agent  oracle_database_name,oracle_database,Response
+Oracle Enterprise Manager Cloud Control 12c Release 4  
+Copyright (c) 1996, 2014 Oracle Corporation.  All rights reserved.
+Status,State,oraerr,Archiver,DatabaseStatus,ActiveState
+1,OPEN,,STARTED,ACTIVE,NORMAL
+[oracle@xxxx:/data/oracle/agent_oms/core/12.1.0.4.0/bin]# 
