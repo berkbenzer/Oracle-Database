@@ -1,3 +1,15 @@
+### First Case Connection kill
+
+
+Please add the below parameter in the server side sqlnet.ora file in RDBMS_HOME/network/admin location on all the nodes. 
+
+USE_NS_PROBES_FOR_DCD=true
+SQLNET.EXPIRE_TIME=10
+
+
+
+## second case database startup problem
+
 SQL> startup;
 ORACLE instance started.
 
