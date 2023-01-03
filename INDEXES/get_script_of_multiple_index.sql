@@ -1,3 +1,6 @@
+### get single index script ###
+select dbms_metadata.get_ddl ('INDEX', 'EMP_EMAIL_UK', 'HR') from dual;
+
 
 ### get multiple index script ###
 
