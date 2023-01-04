@@ -2,7 +2,7 @@
 set linesize 200;
 column INDEX_NAME format a30;
 column OWNER format a30;
-COLUMN TABLE_NAME format a50;
+COLUMN TABLE_NAME format a30;
 column TABLE_OWNER format a30;
 column TABLESPACE_NAME format a30;
 column LAST_ANALYZED format a15;
