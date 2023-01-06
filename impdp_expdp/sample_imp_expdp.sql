@@ -2,7 +2,7 @@
 --single table
 impdp FILE=T_PAYMENT.dmp  TABLES=T_PAYMENT_INFO_DMP
 
-expdp \"SYS@SRE  as sysdba\" file=TAB_06012023.dmp log=TAB_06012023.log tables=SCHEMA.TABLE
+expdp \"SYS@SERVICE  as sysdba\" file=TAB_06012023.dmp log=TAB_06012023.log tables=SCHEMA.TABLE
 
 
 exp \'/ as sysdba\' file=/oracle/yedek/audit_27032019.dmp log=/oracle/yedek/audit_27032019.log tables=sys.aud$
