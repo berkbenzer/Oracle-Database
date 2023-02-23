@@ -1,0 +1,38 @@
+SQL> select name from v$database;
+
+NAME
+---------
+CECLONE
+
+SQL> drop database;
+drop database
+*
+ERROR at line 1:
+ORA-01586: database must be mounted EXCLUSIVE and not open for this operation
+
+
+
+Solution
+
+SQL>  alter system set cluster_database=FALSE scope=spfile;
+
+System altered.
+
+SQL>  Shutdown abort;
+ORACLE instance shut down.
+SQL> startup mount exclusive restrict;
+ORACLE instance started.
+
+Total System Global Area 8589934304 bytes
+Fixed Size                  8916704 bytes
+Variable Size            1526726656 bytes
+Database Buffers         7012876288 bytes
+Redo Buffers               41414656 bytes
+Database mounted.
+SQL> drop Database;
+
+Database dropped.
+
+Disconnected from Oracle Database 18c Enterprise Edition Release 18.0.0.0.0 - Production
+Version 18.13.0.0.0
+SQL>
