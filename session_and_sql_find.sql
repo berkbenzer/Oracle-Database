@@ -26,3 +26,21 @@ JOIN V$SESSION ses ON s.PARSING_USER_ID = ses.USER# -- Join on USER# to link the
 WHERE s.EXECUTIONS > 0
 AND s.SQL_TEXT LIKE '%UPDATE%'
 AND s.SQL_ID = '';
+
+
+
+SELECT
+    L.SID,
+    O.OBJECT_NAME,
+    L.TYPE,
+    L.LMODE,
+    L.REQUEST
+FROM
+    V$LOCK L
+JOIN
+    DBA_OBJECTS O
+ON
+    L.ID1 = O.OBJECT_ID
+    where object_name ='TABLE_NAME';
+
+
