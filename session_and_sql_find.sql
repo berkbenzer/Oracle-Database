@@ -27,7 +27,7 @@ WHERE s.EXECUTIONS > 0
 AND s.SQL_TEXT LIKE '%UPDATE%'
 AND s.SQL_ID = '';
 
-
+---Display locks on specific object
 
 SELECT
     L.SID,
